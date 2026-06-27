@@ -18,8 +18,15 @@ import uvicorn
 
 app = FastAPI()
 
-# Mount static files
-app.mount("/", StaticFiles(directory=".", html=True), name="static")
+# Mount static files at /static instead of root
+app.mount("/static", StaticFiles(directory="."), name="static")
+
+
+@app.get("/")
+async def index():
+    """Serve the main dashboard"""
+    with open("index.html", "r") as f:
+        return HTMLResponse(f.read())
 
 
 @dataclass
