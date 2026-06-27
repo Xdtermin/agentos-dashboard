@@ -152,6 +152,7 @@
         <div class="brand-dot"></div>
       </div>
       <span class="brand-text">AgentOS</span>
+      <span class="version-badge">v1.0</span>
     </div>
 
     <div class="tabs">
@@ -181,6 +182,11 @@
 
   <script type="module">
     import { Badge } from './components.js';
+
+    // Render version badge
+    const brandSection = document.querySelector('.brand');
+    const versionBadgeHTML = Badge({ text: 'v1.0', color: 'var(--text-muted)', variant: 'subtle' });
+    document.querySelector('.version-badge').innerHTML = versionBadgeHTML;
 
     // Clock
     function updateClock() {
