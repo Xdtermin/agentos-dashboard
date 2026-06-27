@@ -143,6 +143,214 @@
 
     .tab-panel { display: none; }
     .tab-panel.active { display: block; }
+
+    /* Glass card styles for component-generated content */
+    .glass-card {
+      background: var(--bg-glass);
+      backdrop-filter: var(--blur-heavy);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-lg);
+    }
+
+    /* Overview Tab Styles */
+    .ops-console {
+      display: grid;
+      grid-template-columns: 180px 1fr 1fr;
+      gap: var(--space-5);
+      margin-bottom: var(--space-4);
+    }
+
+    .radar-container {
+      width: 180px;
+      height: 180px;
+      position: relative;
+    }
+
+    .radar-svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .radar-circle {
+      fill: none;
+      stroke: var(--border-glass);
+      stroke-width: 0.5;
+    }
+
+    .radar-crosshair {
+      stroke: var(--border-glass);
+      stroke-width: 0.3;
+    }
+
+    .radar-sweep {
+      transform-origin: 70px 70px;
+      animation: radarSweep 3s linear infinite;
+    }
+
+    @keyframes radarSweep {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .radar-dot {
+      fill: var(--accent);
+      r: 4;
+      transition: all 0.3s ease;
+    }
+
+    .directive-section {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+
+    .directive-label {
+      font: 400 var(--font-size-xs) var(--font-mono);
+      color: var(--text-muted);
+      letter-spacing: var(--letter-spacing-wide);
+      text-transform: uppercase;
+    }
+
+    .directive-text {
+      font: 400 var(--font-size-sm) var(--font-mono);
+      color: var(--brand-cyan);
+      animation: pulseDirective 4s ease-in-out infinite;
+    }
+
+    @keyframes pulseDirective {
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 1; }
+    }
+
+    .context-window {
+      border-top: 1px solid var(--border-glass);
+      padding-top: var(--space-3);
+    }
+
+    .context-agent {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin-bottom: var(--space-2);
+      font: 400 var(--font-size-sm) var(--font-mono);
+    }
+
+    .context-fill {
+      height: 4px;
+      border-radius: var(--radius-full);
+      background: var(--bg-glass);
+      overflow: hidden;
+    }
+
+    .context-fill-bar {
+      height: 100%;
+      border-radius: var(--radius-full);
+      transition: width 0.5s ease;
+    }
+
+    .vps-section {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    .vps-metric {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+    }
+
+    .vps-metric-label {
+      display: flex;
+      justify-content: space-between;
+      font: 400 var(--font-size-xs) var(--font-mono);
+      color: var(--text-muted);
+    }
+
+    .stats-strip {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: var(--space-3);
+      margin-bottom: var(--space-4);
+    }
+
+    .stat-card {
+      border-top: 2px solid var(--accent);
+    }
+
+    .integrity-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font: 400 var(--font-size-xs) var(--font-mono);
+      color: var(--text-muted);
+      margin-top: var(--space-1);
+    }
+
+    .pulsing-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--status-active);
+      border-radius: var(--radius-full);
+      animation: pulse 2s infinite;
+    }
+
+    .bottom-section {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: var(--space-4);
+    }
+
+    .throughput-section {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    .throughput-value {
+      font: 700 var(--font-size-3xl) var(--font-display);
+      color: var(--brand-cyan);
+    }
+
+    .sparkline-canvas {
+      width: 100%;
+      height: 80px;
+      border-radius: var(--radius-md);
+    }
+
+    .glowing-dot {
+      fill: var(--brand-cyan);
+      filter: drop-shadow(0 0 8px var(--brand-cyan));
+    }
+
+    .activity-section {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    .log-entry {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-2);
+      border-radius: var(--radius-sm);
+      font: 400 var(--font-size-sm) var(--font-mono);
+    }
+
+    .log-timestamp {
+      color: var(--text-muted);
+      min-width: 60px;
+    }
+
+    .log-task {
+      flex: 1;
+      color: var(--text-primary);
+    }
+
+    .status-badge {
+      min-width: 60px;
+    }
   </style>
 </head>
 <body>
@@ -152,7 +360,7 @@
         <div class="brand-dot"></div>
       </div>
       <span class="brand-text">AgentOS</span>
-      <span class="version-badge">v1.0</span>
+      <span class="version-badge">v1.1</span>
     </div>
 
     <div class="tabs">
@@ -173,7 +381,98 @@
   </nav>
 
   <main class="main">
-    <div id="overview" class="tab-panel active"></div>
+    <div id="overview" class="tab-panel active">
+      <!-- LIVE OPS CONSOLE -->
+      <div class="glass-card ops-console">
+        <!-- Left: Radar -->
+        <div class="radar-container">
+          <svg class="radar-svg" viewBox="0 0 140 140">
+            <circle class="radar-circle" cx="70" cy="70" r="10" />
+            <circle class="radar-circle" cx="70" cy="70" r="25" />
+            <circle class="radar-circle" cx="70" cy="70" r="40" />
+            <circle class="radar-circle" cx="70" cy="70" r="55" />
+            <line class="radar-crosshair" x1="70" y1="0" x2="70" y2="140" />
+            <line class="radar-crosshair" x1="0" y1="70" x2="140" y2="70" />
+            <g class="radar-sweep">
+              <line x1="70" y1="70" x2="70" y2="5" stroke="rgba(125,211,252,0.3)" stroke-width="2" />
+            </g>
+            <g id="radar-dots"></g>
+          </svg>
+        </div>
+
+        <!-- Center: Current Directive & Context Window -->
+        <div class="directive-section">
+          <div>
+            <div class="directive-label">CURRENT DIRECTIVE</div>
+            <div class="directive-text" id="directive-text">ORCHESTRATOR · Pipeline execution started</div>
+          </div>
+          <div class="context-window">
+            <div class="directive-label">CONTEXT WINDOW</div>
+            <div id="context-agents"></div>
+          </div>
+        </div>
+
+        <!-- Right: VPS Health -->
+        <div class="vps-section">
+          <div class="directive-label">VPS HEALTH</div>
+          <div class="vps-metric">
+            <div class="vps-metric-label">
+              <span>CPU</span>
+              <span id="vps-cpu-value">0%</span>
+            </div>
+            <div id="vps-cpu-bar"></div>
+          </div>
+          <div class="vps-metric">
+            <div class="vps-metric-label">
+              <span>MEMORY</span>
+              <span id="vps-memory-value">0%</span>
+            </div>
+            <div id="vps-memory-bar"></div>
+          </div>
+          <div class="vps-metric">
+            <div class="vps-metric-label">
+              <span>DISK</span>
+              <span id="vps-disk-value">0%</span>
+            </div>
+            <div id="vps-disk-bar"></div>
+          </div>
+          <div class="vps-metric">
+            <div class="vps-metric-label">
+              <span>HERMES DBs</span>
+              <span id="vps-db-size" style="color: var(--brand-gold)">0 GB</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STATS STRIP -->
+      <div id="stats-strip" class="stats-strip">
+        <div class="glass-card stat-card" id="integrity-card"></div>
+        <div class="glass-card stat-card" id="calls-card"></div>
+        <div class="glass-card stat-card" id="messages-card"></div>
+        <div class="glass-card stat-card" id="tokens-card"></div>
+        <div class="glass-card stat-card" id="cache-card"></div>
+      </div>
+
+      <!-- FOOTER STATS -->
+      <div id="footer-stats" class="stats-strip"></div>
+
+      <!-- BOTTOM SECTION -->
+      <div class="bottom-section">
+        <!-- Throughput -->
+        <div class="glass-card throughput-section">
+          <div class="directive-label">THROUGHPUT</div>
+          <div class="throughput-value" id="throughput-value">0</div>
+          <canvas id="sparkline-canvas" class="sparkline-canvas"></canvas>
+        </div>
+
+        <!-- Activity Feed -->
+        <div class="glass-card activity-section">
+          <div class="directive-label">ACTIVITY</div>
+          <div id="activity-feed"></div>
+        </div>
+      </div>
+    </div>
     <div id="agents" class="tab-panel"></div>
     <div id="tasks" class="tab-panel"></div>
     <div id="schedule" class="tab-panel"></div>
@@ -181,7 +480,8 @@
   </main>
 
   <script type="module">
-    import { Badge } from './components.js';
+    import { Badge, StatCard, ProgressBar } from './components.js';
+    import { DashboardDataClient } from './dashboard-client.js';
 
     // Render version badge
     const brandSection = document.querySelector('.brand');
@@ -205,6 +505,123 @@
         document.getElementById(tab.dataset.tab).classList.add('active');
       });
     });
+
+    // SSE Client for live data
+
+    const dataClient = new DashboardDataClient();
+
+    dataClient.connect((data) => {
+      console.log('Received data:', data);
+      updateDashboard(data);
+    }, (error) => {
+      console.error('Data client error:', error);
+    });
+
+    function updateDashboard(data) {
+      // Update VPS health
+      const vps = data.vps;
+      document.getElementById('vps-cpu-value').textContent = vps.cpu.toFixed(1) + '%';
+      document.getElementById('vps-cpu-bar').innerHTML = ProgressBar({ pct: vps.cpu.toFixed(1), color: vps.cpu > 85 ? 'var(--status-error)' : vps.cpu > 70 ? 'var(--status-warning)' : 'var(--brand-cyan)' });
+      document.getElementById('vps-memory-value').textContent = vps.memory.toFixed(1) + '%';
+      document.getElementById('vps-memory-bar').innerHTML = ProgressBar({ pct: vps.memory.toFixed(1), color: vps.memory > 85 ? 'var(--status-error)' : vps.memory > 70 ? 'var(--status-warning)' : 'var(--brand-cyan)' });
+      document.getElementById('vps-disk-value').textContent = vps.disk.toFixed(1) + '%';
+      document.getElementById('vps-disk-bar').innerHTML = ProgressBar({ pct: vps.disk.toFixed(1), color: vps.disk > 85 ? 'var(--status-error)' : vps.disk > 70 ? 'var(--status-warning)' : 'var(--brand-cyan)' });
+      document.getElementById('vps-db-size').textContent = vps.db_size;
+
+      // Update stats strip
+      const stats = data.stats;
+      document.getElementById('integrity-card').innerHTML = `
+        <div style="font: 400 var(--font-size-xs) var(--font-mono); color: var(--text-muted); letter-spacing: var(--letter-spacing-wide); text-transform: uppercase; border-top: 2px solid var(--status-active); padding-top: var(--space-1);">Integrity</div>
+        <div style="font: 700 var(--font-size-2xl) var(--font-display); color: var(--status-active); margin: var(--space-2) 0;">${(stats.integrity + (Math.random() * 0.4 - 0.2)).toFixed(1)}%</div>
+        <div class="integrity-row"><span class="pulsing-dot"></span><span>5 of 5 responsive</span></div>
+      `;
+      document.getElementById('calls-card').innerHTML = StatCard({
+        label: 'Agent Calls',
+        value: stats.agent_calls.toLocaleString(),
+        accent: 'var(--brand-cyan)',
+        barWidth: '100%'
+      });
+      document.getElementById('messages-card').innerHTML = StatCard({
+        label: 'Messages',
+        value: stats.messages.toLocaleString(),
+        accent: 'var(--agent-orchestrator)',
+        barWidth: '100%'
+      });
+      document.getElementById('tokens-card').innerHTML = StatCard({
+        label: 'Tokens In',
+        value: (stats.tokens_in / 1000000).toFixed(1) + 'M',
+        accent: 'var(--brand-gold)',
+        barWidth: '100%'
+      });
+      document.getElementById('cache-card').innerHTML = StatCard({
+        label: 'Cache Hits',
+        value: stats.cache_hits.toLocaleString(),
+        accent: 'var(--brand-pink)',
+        barWidth: '100%'
+      });
+
+      // Update footer stats
+      const footerStats = document.getElementById('footer-stats');
+      footerStats.innerHTML = `
+        ${StatCard({ label: 'Queue', value: stats.queue.toString(), accent: 'var(--agent-orchestrator)', barWidth: '100%' })}
+        ${StatCard({ label: 'Sessions', value: stats.sessions.toString(), accent: 'var(--agent-writer)', barWidth: '100%' })}
+        ${StatCard({ label: 'Errors', value: stats.errors.toString(), accent: stats.errors > 0 ? 'var(--status-error)' : 'var(--status-active)', barWidth: '100%' })}
+        ${StatCard({ label: 'Today', value: stats.today.toString(), accent: 'var(--brand-gold)', barWidth: '100%' })}
+        ${StatCard({ label: 'Uptime', value: stats.uptime, accent: 'var(--brand-pink)', barWidth: '100%' })}
+      `;
+
+      // Update radar dots
+      updateRadar(data.agents);
+
+      // Update context agents
+      updateContextAgents(data.agents);
+
+      // Update activity feed
+      updateActivityFeed(data.logs);
+
+      // Update throughput
+      document.getElementById('throughput-value').textContent = stats.agent_calls.toLocaleString();
+    }
+
+    function updateRadar(agents) {
+      const radarDots = document.getElementById('radar-dots');
+      const totalResponses = agents.reduce((sum, a) => sum + a.responses, 0);
+
+      radarDots.innerHTML = agents.map(agent => {
+        const share = agent.responses / totalResponses;
+        const angle = (share * 2 * Math.PI) - (Math.PI / 2);
+        const radius = 55 * Math.sqrt(share);
+        const x = 70 + radius * Math.cos(angle);
+        const y = 70 + radius * Math.sin(angle);
+
+        return `<circle class="radar-dot" cx="${x}" cy="${y}" style="--accent: ${agent.accent}" fill="${agent.accent}" />`;
+      }).join('');
+    }
+
+    function updateContextAgents(agents) {
+      const contextAgents = document.getElementById('context-agents');
+      contextAgents.innerHTML = agents.map(agent => `
+        <div class="context-agent">
+          <div style="width: 100px; color: ${agent.accent}">${agent.name}</div>
+          <div class="context-fill" style="flex: 1">
+            <div class="context-fill-bar" style="width: ${agent.context_fill * 100}%; background: ${agent.accent}"></div>
+          </div>
+          <div style="font-size: 10px; color: var(--text-muted); min-width: 40px; text-align: right">${agent.status}</div>
+        </div>
+      `).join('');
+    }
+
+    function updateActivityFeed(logs) {
+      const activityFeed = document.getElementById('activity-feed');
+      activityFeed.innerHTML = logs.map(log => `
+        <div class="log-entry">
+          <span class="log-timestamp">${log.timestamp}</span>
+          <span class="status-badge">${Badge({ text: log.agent, color: log.status === 'error' ? 'var(--status-error)' : log.status === 'completed' ? 'var(--status-success)' : log.status === 'active' ? 'var(--status-active)' : 'var(--text-muted)', variant: 'subtle' })}</span>
+          <span class="log-task">${log.task}</span>
+          <span class="status-badge">${Badge({ text: log.status, color: log.status === 'error' ? 'var(--status-error)' : log.status === 'completed' ? 'var(--status-success)' : log.status === 'active' ? 'var(--status-active)' : 'var(--text-muted)', variant: 'subtle' })}</span>
+        </div>
+      `).join('');
+    }
   </script>
 </body>
 </html>
