@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgentOS Dashboard</title>
+  <link rel="stylesheet" href="tokens.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--bg-base);
+      min-height: 100vh;
+      font: 400 var(--font-size-base) var(--font-display);
+      color: var(--text-primary);
+      overflow-x: hidden;
+      position: relative;
+    }
+    body::before { content: ''; position: fixed; inset: 0; background: var(--orb-violet); pointer-events: none; z-index: -1; }
+    body::after { content: ''; position: fixed; inset: 0; background-size: var(--grid-size) var(--grid-size); background-image: var(--grid-pattern); pointer-events: none; z-index: -1; }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--space-4);
+      background: rgba(21,21,31,0.85);
+      backdrop-filter: var(--blur-heavy);
+      border-bottom: 1px solid var(--border-glass);
+      z-index: 100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .brand-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-full);
+      background: conic-gradient(from 0deg, var(--brand-violet), var(--brand-cyan), var(--brand-violet));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .brand-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--brand-mint);
+      border-radius: var(--radius-full);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 0 rgba(94,226,181,0.4); }
+      50% { transform: scale(1.2); opacity: 0.8; box-shadow: 0 0 0 8px rgba(94,226,181,0); }
+    }
+
+    .brand-text {
+      font: 700 var(--font-size-lg) var(--font-display);
+      background: linear-gradient(135deg, var(--brand-violet), var(--brand-cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .tabs {
+      display: flex;
+      gap: var(--space-1);
+      background: rgba(255,255,255,0.05);
+      padding: var(--space-1);
+      border-radius: var(--radius-full);
+    }
+
+    .tab {
+      padding: var(--space-2) var(--space-3);
+      border-radius: var(--radius-full);
+      font: 500 var(--font-size-sm) var(--font-display);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      border: none;
+      background: transparent;
+    }
+
+    .tab:hover { color: var(--text-primary); }
+    .tab.active {
+      background: #FFFFFF;
+      color: var(--bg-base);
+      font-weight: 600;
+    }
+
+    .status-area {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .status-pill {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-3);
+      background: rgba(94,226,181,0.1);
+      border: 1px solid rgba(94,226,181,0.2);
+      border-radius: var(--radius-full);
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--status-active);
+      border-radius: var(--radius-full);
+      animation: pulse 2s infinite;
+    }
+
+    .status-text {
+      font: 500 var(--font-size-xs) var(--font-mono);
+      color: var(--status-active);
+      letter-spacing: var(--letter-spacing-wide);
+      text-transform: uppercase;
+    }
+
+    .clock {
+      font: 500 var(--font-size-sm) var(--font-mono);
+      color: var(--text-muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .main {
+      padding: calc(64px + var(--space-4)) var(--space-4) var(--space-4);
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="brand">
+      <div class="brand-mark">
+        <div class="brand-dot"></div>
+      </div>
+      <span class="brand-text">AgentOS</span>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="overview">Overview</button>
+      <button class="tab" data-tab="agents">Agents</button>
+      <button class="tab" data-tab="tasks">Tasks</button>
+      <button class="tab" data-tab="schedule">Schedule</button>
+      <button class="tab" data-tab="content">Content</button>
+    </div>
+
+    <div class="status-area">
+      <div class="status-pill">
+        <div class="status-dot"></div>
+        <span class="status-text">All systems operational</span>
+      </div>
+      <div class="clock" id="clock">00:00:00</div>
+    </div>
+  </nav>
+
+  <main class="main">
+    <div id="overview" class="tab-panel active"></div>
+    <div id="agents" class="tab-panel"></div>
+    <div id="tasks" class="tab-panel"></div>
+    <div id="schedule" class="tab-panel"></div>
+    <div id="content" class="tab-panel"></div>
+  </main>
+
+  <script type="module">
+    import { Badge } from './components.js';
+
+    // Clock
+    function updateClock() {
+      const now = new Date();
+      document.getElementById('clock').textContent = now.toLocaleTimeString('en-US', { hour12: false });
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // Tab switching
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.tab).classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
