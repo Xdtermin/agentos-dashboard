@@ -1,11 +1,12 @@
 import { Badge, StatCard, ProgressBar } from './components.js';
 
 class DashboardDataClient {
-  constructor() {
+  constructor(baseURL = '') {
     this.sseConnection = null;
     this.pollingInterval = null;
     this.lastData = null;
     this.isConnected = false;
+    this.baseURL = baseURL;
   }
 
   connect(onData, onError) {
@@ -20,7 +21,7 @@ class DashboardDataClient {
 
   trySSE(onData, onError) {
     try {
-      this.sseConnection = new EventSource('/events');
+      this.sseConnection = new EventSource(`${this.baseURL}/events`);
       this.sseConnection.onopen = () => {
         this.isConnected = true;
         console.log('SSE connected');
@@ -54,7 +55,7 @@ class DashboardDataClient {
     if (this.pollingInterval) return;
     const poll = async () => {
       try {
-        const response = await fetch('/api/stats');
+        const response = await fetch(`${this.baseURL}/api/stats`);
         if (response.ok) {
           const data = await response.json();
           this.lastData = data;
