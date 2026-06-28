@@ -360,7 +360,7 @@
         <div class="brand-dot"></div>
       </div>
       <span class="brand-text">AgentOS</span>
-      <span class="version-badge">v1.1</span>
+      <span class="version-badge">v1.2</span>
     </div>
 
     <div class="tabs">
@@ -508,7 +508,7 @@
 
     // SSE Client for live data
 
-    const dataClient = new DashboardDataClient();
+    const dataClient = new DashboardDataClient('http://45.194.3.169:8000');
 
     dataClient.connect((data) => {
       console.log('Received data:', data);
