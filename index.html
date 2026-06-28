@@ -479,12 +479,10 @@
     <div id="content" class="tab-panel"></div>
   </main>
 
-  <script type="module">
-    import { Badge, StatCard, ProgressBar } from './components.js';
-    import { DashboardDataClient } from './dashboard-client.js';
-
+  <script src="dashboard-client.js"></script>
+  <script src="components.js"></script>
+  <script>
     // Render version badge
-    const brandSection = document.querySelector('.brand');
     const versionBadgeHTML = Badge({ text: 'v1.0', color: 'var(--text-muted)', variant: 'subtle' });
     document.querySelector('.version-badge').innerHTML = versionBadgeHTML;
 

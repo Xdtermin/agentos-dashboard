@@ -1,5 +1,3 @@
-import { Badge, StatCard, ProgressBar } from './components.js';
-
 class DashboardDataClient {
   constructor(baseURL = '') {
     this.sseConnection = null;
@@ -81,4 +79,4 @@ class DashboardDataClient {
   }
 }
 
-export { DashboardDataClient };
+window.DashboardDataClient = DashboardDataClient;

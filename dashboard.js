@@ -1,8 +1,6 @@
 // Dashboard Live Data Client
 // SSE connection with polling fallback every 8 seconds
 
-import { Badge, StatCard, ProgressBar } from './components.js';
-
 class DashboardDataClient {
   constructor() {
     this.sseConnection = null;
@@ -92,4 +90,4 @@ class DashboardDataClient {
   }
 }
 
-export { DashboardDataClient };
+window.DashboardDataClient = DashboardDataClient;
