@@ -155,7 +155,13 @@ def add_log_entry():
 
 def event_stream():
     """SSE stream for live data"""
+    call_count = 0
     while True:
+        # Add new log entry periodically
+        call_count += 1
+        if call_count % 3 == 0:
+            add_log_entry()
+        
         data = {
             "type": "update",
             "agents": [asdict(a) for a in AGENTS],
